@@ -6,7 +6,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 
 class TodoFragmentAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager) {
   override fun getItem(position: Int): Fragment {
-    return TodoListFragment()
+    return when (position) {
+      0 -> TodoListFragment()
+      else -> CompletedTodoListFragment()
+    }
   }
 
   override fun getCount(): Int {
