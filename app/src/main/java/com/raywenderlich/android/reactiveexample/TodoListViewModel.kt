@@ -12,11 +12,14 @@ interface TodoListView {
 class TodoListViewModel(private val view: TodoListView): ViewModel() {
   private val repo = TodoServiceImpl()
   private val disposables = CompositeDisposable()
+  private var todos = mutableListOf<Todo>()
+
   fun start() {
     repo.fetchTodos()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { todos ->
+          this.todos = todos.toMutableList()
           view.setListItems(todos)
         }
         .addTo(disposables)
@@ -26,7 +29,10 @@ class TodoListViewModel(private val view: TodoListView): ViewModel() {
     repo.saveUpdatedTodo(todo.copy(isDone = true))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe()
+        .subscribe {
+          this.todos.remove(todo)
+          view.setListItems(todos)
+        }
         .addTo(disposables)
   }
 

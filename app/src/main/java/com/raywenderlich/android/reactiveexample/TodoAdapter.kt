@@ -6,7 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_todo_list_item.view.*
 
-class TodoAdapter: RecyclerView.Adapter<CharacterViewHolder>() {
+interface TodoToggledCallback {
+  fun todoToggled(todo: Todo)
+}
+
+class TodoAdapter(private val callback: TodoToggledCallback): RecyclerView.Adapter<CharacterViewHolder>() {
   var list: List<Todo> = emptyList()
     set(value) {
       field = value
@@ -26,6 +30,9 @@ class TodoAdapter: RecyclerView.Adapter<CharacterViewHolder>() {
     val todo = list[position]
     holder.itemView.todo_text.text = todo.text
     holder.itemView.todo_switch.isChecked = todo.isDone
+    holder.itemView.todo_switch.setOnCheckedChangeListener { _, isChecked ->
+      callback.todoToggled(todo)
+    }
   }
 }
 
