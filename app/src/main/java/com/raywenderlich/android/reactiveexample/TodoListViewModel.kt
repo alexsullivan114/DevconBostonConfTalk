@@ -16,6 +16,7 @@ class TodoListViewModel(private val view: TodoListView): ViewModel() {
 
   fun start() {
     repo.fetchTodos()
+        .map { todos -> todos.filter { !it.isDone } }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { todos ->
@@ -34,6 +35,13 @@ class TodoListViewModel(private val view: TodoListView): ViewModel() {
           view.setListItems(todos.toMutableList())
         }
         .addTo(disposables)
+  }
+
+  fun todoUpdated(updatedTodo: Todo) {
+    if (!todos.any { it.text == updatedTodo.text }) {
+      todos.add(updatedTodo)
+      view.setListItems(todos.toMutableList())
+    }
   }
 
   override fun onCleared() {

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_characters_list.view.*
 
-class TodoListFragment: Fragment(), TodoListView, TodoToggledCallback {
+class TodoListFragment: Fragment(), TodoListView, TodoToggledCallback, TodoUpdatedCallback {
   private val adapter = TodoAdapter(this)
   private lateinit var viewModel: TodoListViewModel
 
@@ -31,8 +31,13 @@ class TodoListFragment: Fragment(), TodoListView, TodoToggledCallback {
     viewModel.start()
   }
 
+  override fun todoUpdated(todo: Todo) {
+    viewModel.todoUpdated(todo)
+  }
+
   override fun todoToggled(todo: Todo) {
     viewModel.todoCompleted(todo)
+    (activity as? TodoUpdatedCallback)?.todoUpdated(todo.copy(isDone = !todo.isDone))
   }
 
   override fun setListItems(todos: List<Todo>) {

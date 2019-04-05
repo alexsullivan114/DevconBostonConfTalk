@@ -33,6 +33,13 @@ class CompletedTodoListViewModel(private val view: TodoListView): ViewModel() {
         .addTo(disposables)
   }
 
+  fun todoUpdated(updatedTodo: Todo) {
+    if (!todos.any { it.text == updatedTodo.text }) {
+      todos.add(updatedTodo)
+      view.setListItems(todos.toMutableList())
+    }
+  }
+
   override fun onCleared() {
     disposables.dispose()
   }
