@@ -36,6 +36,6 @@ class TodoListFragment: Fragment(), TodoListView, TodoToggledCallback {
   }
 
   override fun setListItems(todos: List<Todo>) {
-    adapter.list = todos
+    adapter.submitList(todos)
   }
 }

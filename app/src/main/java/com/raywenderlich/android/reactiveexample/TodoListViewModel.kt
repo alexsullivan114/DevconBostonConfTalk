@@ -31,7 +31,7 @@ class TodoListViewModel(private val view: TodoListView): ViewModel() {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe {
           this.todos.remove(todo)
-          view.setListItems(todos)
+          view.setListItems(todos.toMutableList())
         }
         .addTo(disposables)
   }
